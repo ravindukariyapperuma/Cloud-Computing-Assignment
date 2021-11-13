@@ -1,0 +1,39 @@
+version: "3"
+services:
+    database-tier:
+        image: 'mongo:latest'
+        restart: always
+        container_name: cc-database-tier
+        ports:
+            - '27017:27017'
+        volumes:
+            - './database-tier/data:/data/db'  
+        networks:
+            - app-network
+    API-tier:
+        container_name: cc-API-tier
+        restart: always
+        build:
+            context: ./API-tier
+            dockerfile: Dockerfile
+        ports:
+            - '5000:5000'
+        depends_on:
+            - database-tier
+        networks:
+            - app-network
+    frontend-tier:   
+        container_name: cc-frontend-tier
+        restart: always
+        build:
+            context: ./frontend-tier
+            dockerfile: Dockerfile
+        ports:
+            - '3000:3000'
+        networks:
+            - app-network                    
+
+
+networks:
+        app-network:
+            driver: bridge
