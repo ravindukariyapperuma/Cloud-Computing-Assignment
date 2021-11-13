@@ -1,25 +1,25 @@
 version: "3"
 services:
-    database-tier:
+    mongo:
         image: 'mongo:latest'
         restart: always
-        container_name: cc-database-tier
+        container_name: mongo
         ports:
             - '27017:27017'
         volumes:
-            - './database-tier/data:/data/db'  
+            - './mongo/data:/data/db'  
         networks:
             - app-network
-    API-tier:
-        container_name: cc-API-tier
+    api-tier:
+        container_name: cc-api-tier
         restart: always
         build:
-            context: ./API-tier
+            context: ./api-tier
             dockerfile: Dockerfile
         ports:
             - '5000:5000'
         depends_on:
-            - database-tier
+            - mongo
         networks:
             - app-network
     frontend-tier:   
